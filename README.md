@@ -6,6 +6,11 @@ pip3 install selenium colorama
 ```
 # Usage
 To run simple create a file called config.json in the directory above where you installed the tool (Please don't put a config.json in a git directory...). I recommend not testing with real info until you're sure this behaves how you expect it to.
+### Silent mode 
+Runs firefox in headless mode. (Does not open the browser)
+```python
+python3 happySnake.py -s
+````
 # Example 
 ![](example.gif)
 

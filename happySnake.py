@@ -7,6 +7,7 @@ from selenium.webdriver.support.select import Select
 from colorama import init, Fore, Style
 import json
 import time
+import sys
 #Initialize variables and get config
 with open('../config.json') as configFile:
     data=json.load(configFile)
@@ -37,7 +38,9 @@ print(Fore.GREEN +
 def goToParent():
     driver.switch_to.parent_frame();
 
-#options.add_argument("--headless")
+if "-s" in sys.argv:
+    options.add_argument("--headless")
+
 driver = webdriver.Firefox(options=options)
 driver.get("https://happymugcoffee.com/collections/roasted-coffee")
 
