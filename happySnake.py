@@ -18,6 +18,8 @@ count = 0
 options = FirefoxOptions()
 nameList = []
 priceList = []
+reset = Style.RESET_ALL
+tick = Fore.BLUE + "[" + Fore.GREEN + "+" + Fore.BLUE + "]" + reset
 
 print(Fore.GREEN +
 '''
@@ -33,7 +35,7 @@ print(Fore.GREEN +
    /    \___________/    \\
    \_____________________/
 --- H A P P Y    S N A K E ---
-''' + Style.RESET_ALL
+''' + reset
 )
 def goToParent():
     driver.switch_to.parent_frame();
@@ -45,8 +47,7 @@ driver = webdriver.Firefox(options=options)
 driver.get("https://happymugcoffee.com/collections/roasted-coffee")
 
 # List the coffee names on the site
-print(Fore.BLUE + "[+]" +  " Which coffee would you like? ")
-print(Style.RESET_ALL)
+print(tick +  " Which coffee would you like? " + reset)
 blends = driver.find_element_by_id("Collection")
 #print(blends.text)
 blendName = driver.find_elements_by_class_name("visually-hidden")
@@ -75,19 +76,18 @@ for i in nameFixed:
     dic[count]=i
 for key, value in dic.items():
     print(key, ' : ', value)
-selection = input(Fore.BLUE+ "[+]" + " Type the number of the coffee you would like\n" + Style.RESET_ALL)
+selection = input(tick + Fore.BLUE + " Type the number of the coffee you would like\n" + reset)
 
 # Lookup the key/value in dictionary then click the correct coffee
 value = dic[int(selection)]
-print(Fore.BLUE + "[+]" + " Selecting " + value + "...")
+print(tick + Fore.BLUE + " Selecting " + value + "...")
 driver.find_element_by_link_text(value).click()
 cart = driver.find_elements_by_id("AddToCart-product-template")[0]
 cart.click()
 driver.find_element_by_xpath("/html/body/div[4]/main/div/div/form/div/div/div[2]/div[4]/input[2]").click()
 
 # Input shipping info (Condense into for loop later)
-print(Fore.BLUE + "[+]" + " Adding info from " + Fore.GREEN + "config.json" + Fore.BLUE + "...")
-print(Style.RESET_ALL)
+print(tick + Fore.BLUE + " Adding info from " + Fore.GREEN + "config.json" + Fore.BLUE + "..." + reset)
 time.sleep(2)
 send = driver.find_element_by_id("checkout_email")
 send.send_keys(data["email"])
@@ -139,9 +139,15 @@ driver.find_element_by_id("verification_value").send_keys(data["cvc"])
 # Press pay
 goToParent()
 total = driver.find_element_by_xpath("/html/body/div/div/aside/div[2]/div[1]/div/div[3]/table/tfoot/tr/td/span[2]").text
-Pay = input(Fore.BLUE + "Your total is: " + Fore.GREEN + total + Fore.RED+ "\nSubmit order? Yes/No: " )
+pay = input(tick + Fore.BLUE + "Your total is: " + Fore.GREEN + total + Fore.RED+ "\nSubmit order? Yes/No: " + reset)
 # Pay now
-# UNCOMMENT THIS WITH CARE, IT WILL PROCESS YOUR ORDER
-#driver.find_element_by_id('continue_button').click()
+if "y" in pay:
+    print(tick + Fore.GREEN + "Processing transaction... (this will take 10 seconds)")
+    time.sleep(10)
+    print(tick + Fore.GREEN + "Your coffee has been bought!")
+   #UNCOMMENT THIS WITH CARE, IT WILL PROCESS YOUR ORDER
+   #driver.find_element_by_id('continue_button').click()
+else:
+    print(Fore.RED + "Exiting without buying!")
 
-#driver.close()
+driver.close()
